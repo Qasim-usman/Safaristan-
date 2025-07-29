@@ -1,0 +1,22 @@
+<% layout('layouts/bioler') %>
+
+<div class="container mt-5 mb-5" style="max-width: 600px;">
+  <form  action="/login" method="post" novalidate class="needs-validation">
+    <div class="mb-5">
+      <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" id="username" name="username" class="form-control" required>
+        <div class="invalid-feedback">Please enter your username.</div>
+      </div>
+      
+    
+      <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+        <div class="invalid-feedback">Please enter your password.</div>
+      </div>
+      
+      <button type="submit" class="btn btn-success mb-5">Login</button>
+    </div>
+  </form>
+</div>

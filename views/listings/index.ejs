@@ -1,0 +1,28 @@
+<% layout('layouts/bioler') %>
+
+<div class="container mt-4">
+  <h2 class="text-center mb-4">All Listings</h2>
+  <div class="row gx-2 gy-3"> <!-- horizontal & vertical spacing -->
+    <% for(let listing of allListings ) { %>
+      <div class="col-12 col-sm-6 col-md-3"> <!-- Mobile: 1, sm: 2, md+: 4 per row -->
+        <a href="/listings/<%= listing._id%>" class="card-margin" style="text-decoration: none; color: black;">
+        <div class="card h-100" style="width: 100%;">
+          <img src="<%= listing.image.url %>" class="card-img-top" alt="">
+            <div class="card-img-overlay"></div>
+          <div class="card-body">
+            <p class="card-text"> 
+  <%= listing.title %> <br>
+  &#8360; <%= (listing.price || 0).toLocaleString("en-PK") %>
+</p>
+
+          </div></a>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+
+
+
+
