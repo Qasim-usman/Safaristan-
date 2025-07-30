@@ -14,43 +14,40 @@ module.exports.newGetRoute=async(req, res) => {
 
 // CREATE - New listing banane ka function
 module.exports.newPostRoute = async (req, res) => {
-    try {
-        // 1️⃣ Form data se listing object banayiye
-        const listing = new Listing(req.body.listing);
-        
-        // 2️⃣ Image upload handle kariye
-        if (req.file) {
-            const url = req.file.path;
-            const filename = req.file.filename;
-            listing.image = { url, filename };
-        }
-        
-        // 3️⃣ Owner set kariye
-        listing.owner = req.user._id;
-        
-        // 4️⃣ 🆕 COORDINATES GET KARIYE
-        console.log('Getting coordinates for:', req.body.listing.location, req.body.listing.country);
-        
-        const coordinates = await getCoordinatesFromLocation(
-            req.body.listing.location,
-            req.body.listing.country
-        );
-        
-        console.log('Coordinates found:', coordinates);
-        listing.coordinates = coordinates;
-        
-        // 5️⃣ Database mein save kariye
-        await listing.save();
-        
-        req.flash("success", "New listing created with location!");
-        res.redirect("/listings");
-        
-    } catch (error) {
-        console.error("Error creating listing:", error);
-        req.flash("error", "Error creating listing. Please try again.");
-        res.redirect("/listings/new");
+  try {
+    const listing = new Listing(req.body.listing);
+
+    // Access uploaded files
+    if (req.files && req.files.image && req.files.image2) {
+      listing.image = {
+        url: req.files.image[0].path,
+        filename: req.files.image[0].filename
+      };
+      listing.image2 = {
+        url: req.files.image2[0].path,
+        filename: req.files.image2[0].filename
+      };
     }
-}
+
+    listing.owner = req.user._id;
+
+    const coordinates = await getCoordinatesFromLocation(
+      req.body.listing.location,
+      req.body.listing.country
+    );
+    listing.coordinates = coordinates;
+
+    await listing.save();
+
+    req.flash("success", "New listing created with 2 images!");
+    res.redirect("/listings");
+  } catch (error) {
+    console.error("Error creating listing:", error);
+    req.flash("error", "Error creating listing. Please try again.");
+    res.redirect("/listings/new");
+  }
+};
+
 module.exports.showGetRoute=async (req, res) => {
     const { id } = req.params;
    const listing = await Listing.findById(req.params.id)

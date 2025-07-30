@@ -20,6 +20,15 @@ const listingSchema = new Schema({
             default: "https://i.pinimg.com/736x/81/5c/56/815c56bf3ba4127c2db5b4b047abf2eb.jpg"
         }
     },
+    image2: {
+        filename: {
+            type: String
+        },
+        url: {
+            type: String,
+            default: "https://i.pinimg.com/736x/81/5c/56/815c56bf3ba4127c2db5b4b047abf2eb.jpg"
+        }
+    },
     price: {
         type: Number,
         required: true,  // spelling fix: reqiured -> required

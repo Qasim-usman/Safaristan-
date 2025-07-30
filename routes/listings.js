@@ -28,9 +28,13 @@ router.route("/")
   .post(
     isLoggedIn,
     validateListing,
-    upload.single("listing[image][url]"),
+    upload.fields([
+      { name: "image", maxCount: 1 },
+      { name: "image2", maxCount: 1 }
+    ]),
     wrapAsync(listingController.newPostRoute)
   );
+
 router.get("/admin/bulk-update", listingController.bulkUpdateCoordinates);
 // New Form
 router.get("/new", isLoggedIn, wrapAsync(listingController.newGetRoute));

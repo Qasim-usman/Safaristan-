@@ -1,49 +1,60 @@
 <% layout('layouts/bioler') %>
 
-
-
 <div class="container mt-5" style="max-width: 600px;">
   <h3 class="mb-4 text-start">Create Listing</h3>
 
-  <form action="/listings" method="POST" novalidate class="needs-validation" enctype="multipart/form-data">
+  <form action="/listings" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
 
+    <!-- Title -->
     <div class="mb-3">
       <label for="title" class="form-label">Title</label>
       <input type="text" id="title" name="listing[title]" class="form-control" placeholder="Enter your title" required>
       <div class="invalid-feedback">Please enter a catchy title.</div>
     </div>
 
+    <!-- Description -->
     <div class="mb-3">
       <label for="description" class="form-label">Description</label>
       <textarea id="description" name="listing[description]" class="form-control" placeholder="Enter your description" rows="5" required></textarea>
       <div class="invalid-feedback">Please provide a short description.</div>
     </div>
 
- 
+    <!-- Image 1 -->
     <div class="mb-3">
-      <label for="image" class="form-label">Upload Image</label>
-      <input type="file" id="image" name="listing[image][url]" class="form-control" placeholder="Enter your image URL/Link" required>
-      <div class="invalid-feedback">Please enter a valid image URL.</div>
+      <label for="image" class="form-label">Upload Main Image</label>
+      <input type="file" id="image" name="image" class="form-control" required>
+      <div class="invalid-feedback">Please upload a main image.</div>
     </div>
 
+    <!-- Image 2 -->
+    <div class="mb-3">
+      <label for="image2" class="form-label">Upload Secondary Image</label>
+      <input type="file" id="image2" name="image2" class="form-control" required>
+      <div class="invalid-feedback">Please upload a secondary image.</div>
+    </div>
+
+    <!-- Price -->
     <div class="mb-3">
       <label for="price" class="form-label">Price (PKR)</label>
       <input type="number" id="price" name="listing[price]" class="form-control" placeholder="Enter your price" required>
       <div class="invalid-feedback">Price must be a valid number.</div>
     </div>
 
+    <!-- Location -->
     <div class="mb-3">
       <label for="location" class="form-label">Location</label>
       <input type="text" id="location" name="listing[location]" class="form-control" placeholder="Enter your location" required>
       <div class="invalid-feedback">Please provide a location.</div>
     </div>
 
+    <!-- Country -->
     <div class="mb-4">
       <label for="country" class="form-label">Country</label>
       <input type="text" id="country" name="listing[country]" class="form-control" placeholder="Enter your country" required>
       <div class="invalid-feedback">Country name must be valid.</div>
     </div>
 
-    <button type="submit" class="btn btn-success" style="margin-bottom: 2rem;">Submit</button>
+    <!-- Submit -->
+    <button type="submit" class="btn btn-success mb-4">Submit</button>
   </form>
 </div>
