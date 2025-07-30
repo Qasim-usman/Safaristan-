@@ -118,7 +118,7 @@
 <!-- Map Container -->
 <div id="map" class="map-container"></div>
           <!-- Review Form -->
-          <% if (userCurr) { %>
+          
             <div class="mt-4">
               <h3>Leave a review</h3>
               <form action="/listings/<%= listing._id %>/reviews" method="POST" class="needs-validation" novalidate>
@@ -144,7 +144,7 @@
               </form>
               <hr>
             </div>
-          <% } %>
+        
 
           <!-- Show Reviews -->
           <div class="row mt-4">
