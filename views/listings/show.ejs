@@ -137,51 +137,95 @@
   </div>
   <!-- Map Section ke baad, </div> se pehle -->
 <script>
-    // Server-side data passed safely using JSON.stringify
-    window.listingData = {
-        coordinates: <%- JSON.stringify(listing.coordinates || null) %>,
-        title: <%- JSON.stringify(listing.title) %>,
-        location: <%- JSON.stringify(listing.location) %>,
-        price: <%- JSON.stringify(listing.price) %>
-    };
+// Pass server data to client-side JavaScript
+window.listingData = {
+    coordinates: {
+        lat: <%= listing.coordinates ? listing.coordinates.lat : 'null' %>,
+        lng: <%= listing.coordinates ? listing.coordinates.lng : 'null' %>
+    },
+    title: '<%= listing.title %>',
+    location: '<%= listing.location %>',
+    price: '<%= listing.price %>'
+};
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const coords = window.listingData.coordinates;
-
-        if (coords && coords.lat && coords.lng) {
-            initializeMap(coords.lat, coords.lng);
-        } else {
-            document.getElementById('map').innerHTML =
-                '<div class="text-center p-4"><i class="fas fa-map-marker-alt"></i><br>Location coordinates not available</div>';
-        }
-    });
-
-    function initializeMap(lat, lng) {
-        const map = L.map('map').setView([lat, lng], 12);
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        const customIcon = L.divIcon({
-            html: '<div class="custom-marker"><i class="fas fa-home"></i></div>',
-            iconSize: [35, 35],
-            iconAnchor: [17, 17],
-            className: 'custom-div-icon'
-        });
-
-        L.marker([lat, lng], { icon: customIcon })
-            .addTo(map)
-            .bindPopup(`
-                <div style="text-align: center;">
-                    <h6>${window.listingData.title}</h6>
-                    <p>${window.listingData.location}</p>
-                    <p style="color: #FF5A5F; font-weight: bold;">₹${window.listingData.price}/night</p>
-                </div>
-            `)
-            .openPopup();
+// Initialize map after page loads
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.listingData.coordinates.lat && window.listingData.coordinates.lng) {
+        initializeMap();
+    } else {
+        document.getElementById('map').innerHTML = 
+            '<div class="text-center p-4"><i class="fas fa-map-marker-alt"></i><br>Location coordinates not available</div>';
     }
-</script>
+});
+function initializeMap() {
+    // Pehle user location try karein
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                // User ki actual location
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                
+                const map = L.map('map').setView([userLat, userLng], 12);
+                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap contributors'
+                }).addTo(map);
+                
+                // User location marker
+                const customIcon = L.divIcon({
+                    html: '<div class="custom-marker"><i class="fas fa-map-marker-alt"></i></div>',
+                    iconSize: [35, 35],
+                    iconAnchor: [17, 17],
+                    className: 'custom-div-icon'
+                });
+                
+                L.marker([userLat, userLng], { icon: customIcon })
+                    .addTo(map)
+                    .bindPopup("Your current location")
+                    .openPopup();
+            },
+            function(error) {
+                // Agar permission nahi mili to listing coordinates use karein
+                showListingLocation();
+            }
+        );
+    } else {
+        showListingLocation();
+    }
+}
 
+function showListingLocation() {
+    const coords = window.listingData.coordinates;
+    
+    // Create map
+    const map = L.map('map').setView([coords.lat, coords.lng], 12);
+    
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // Better custom marker
+    const customIcon = L.divIcon({
+        html: '<div class="custom-marker"><i class="fas fa-home"></i></div>',
+        iconSize: [35, 35],
+        iconAnchor: [17, 17],
+        className: 'custom-div-icon'
+    });
+    
+    // Add marker
+    L.marker([coords.lat, coords.lng], { icon: customIcon })
+        .addTo(map)
+        .bindPopup(`
+            <div style="text-align: center;">
+                <h6>${window.listingData.title}</h6>
+                <p>${window.listingData.location}</p>
+                <p style="color: #FF5A5F; font-weight: bold;">₹${window.listingData.price}/night</p>
+            </div>
+        `)
+        .openPopup();
+}
+</script>
   
 </div>

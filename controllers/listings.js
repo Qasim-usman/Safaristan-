@@ -10,51 +10,43 @@ module.exports.newGetRoute=async(req, res) => {
 }
 
 // CREATE - New listing banane ka function
-// controllers/listingController.js
 
+
+// CREATE - New listing banane ka function
 module.exports.newPostRoute = async (req, res) => {
     try {
-        console.log('🚀 [RENDER] New listing creation started');
-        console.log('📍 [RENDER] Location:', req.body.listing.location);
-        console.log('🌍 [RENDER] Country:', req.body.listing.country);
-        
+        // 1️⃣ Form data se listing object banayiye
         const listing = new Listing(req.body.listing);
         
-        // Image handling
+        // 2️⃣ Image upload handle kariye
         if (req.file) {
-            listing.image = {
-                url: req.file.path,
-                filename: req.file.filename
-            };
+            const url = req.file.path;
+            const filename = req.file.filename;
+            listing.image = { url, filename };
         }
         
+        // 3️⃣ Owner set kariye
         listing.owner = req.user._id;
         
-        // Geocoding with timeout protection
-        console.log('🔍 [RENDER] Starting geocoding...');
-        const startTime = Date.now();
+        // 4️⃣ 🆕 COORDINATES GET KARIYE
+        console.log('Getting coordinates for:', req.body.listing.location, req.body.listing.country);
         
-        const coordinates = await Promise.race([
-            getCoordinatesFromLocation(req.body.listing.location, req.body.listing.country),
-            new Promise((_, reject) => 
-                setTimeout(() => reject(new Error('Geocoding timeout')), 20000)
-            )
-        ]);
+        const coordinates = await getCoordinatesFromLocation(
+            req.body.listing.location,
+            req.body.listing.country
+        );
         
-        const endTime = Date.now();
-        console.log(`⏱️ [RENDER] Geocoding took: ${endTime - startTime}ms`);
-        console.log('📍 [RENDER] Final coordinates:', coordinates);
-        
+        console.log('Coordinates found:', coordinates);
         listing.coordinates = coordinates;
         
+        // 5️⃣ Database mein save kariye
         await listing.save();
-        console.log('✅ [RENDER] Listing saved successfully');
         
-        req.flash("success", "New listing created!");
+        req.flash("success", "New listing created with location!");
         res.redirect("/listings");
         
     } catch (error) {
-        console.error('❌ [RENDER] Controller Error:', error);
+        console.error("Error creating listing:", error);
         req.flash("error", "Error creating listing. Please try again.");
         res.redirect("/listings/new");
     }
@@ -87,7 +79,6 @@ module.exports.editGetRoute = async (req, res) => {
 
     res.render("listings/edit", { listing, transformedUrlImage });
 };
-
 
 // UPDATE - Existing listing edit karne ka function
 module.exports.editPutRoute = async (req, res) => {
