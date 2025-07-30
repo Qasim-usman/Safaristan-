@@ -158,47 +158,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 function initializeMap() {
-    // Pehle user location try karein
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            function(position) {
-                // User ki actual location
-                const userLat = position.coords.latitude;
-                const userLng = position.coords.longitude;
-                
-                const map = L.map('map').setView([userLat, userLng], 12);
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(map);
-                
-                // User location marker
-                const customIcon = L.divIcon({
-                    html: '<div class="custom-marker"><i class="fas fa-map-marker-alt"></i></div>',
-                    iconSize: [35, 35],
-                    iconAnchor: [17, 17],
-                    className: 'custom-div-icon'
-                });
-                
-                L.marker([userLat, userLng], { icon: customIcon })
-                    .addTo(map)
-                    .bindPopup("Your current location")
-                    .openPopup();
-            },
-            function(error) {
-                // Agar permission nahi mili to listing coordinates use karein
-                showListingLocation();
-            }
-        );
-    } else {
-        showListingLocation();
-    }
-}
-
-function showListingLocation() {
     const coords = window.listingData.coordinates;
     
-    // Create map
+    // Pehle listing ka location check karein
+    if (!coords.lat || !coords.lng) {
+        document.getElementById('map').innerHTML = 
+            '<div class="text-center p-4"><i class="fas fa-map-marker-alt"></i><br>Location coordinates not available</div>';
+        return;
+    }
+    
+    // Map ko listing ke coordinates par center karein
     const map = L.map('map').setView([coords.lat, coords.lng], 12);
     
     // Add tile layer
@@ -206,25 +175,71 @@ function showListingLocation() {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
     
-    // Better custom marker
-    const customIcon = L.divIcon({
-        html: '<div class="custom-marker"><i class="fas fa-home"></i></div>',
+    // Listing ka marker (RED - House icon)
+    const listingIcon = L.divIcon({
+        html: '<div class="custom-marker" style="background-color: #FF5A5F; color: white;"><i class="fas fa-home"></i></div>',
         iconSize: [35, 35],
         iconAnchor: [17, 17],
         className: 'custom-div-icon'
     });
     
-    // Add marker
-    L.marker([coords.lat, coords.lng], { icon: customIcon })
+    // Add listing marker
+    L.marker([coords.lat, coords.lng], { icon: listingIcon })
         .addTo(map)
         .bindPopup(`
             <div style="text-align: center;">
                 <h6>${window.listingData.title}</h6>
-                <p>${window.listingData.location}</p>
+                <p><strong>${window.listingData.location}</strong></p>
                 <p style="color: #FF5A5F; font-weight: bold;">₹${window.listingData.price}/night</p>
             </div>
         `)
         .openPopup();
+    
+    // Ab user ki location bhi add karein (optional)
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+                
+                // User ka marker (BLUE - Person icon)
+                const userIcon = L.divIcon({
+                    html: '<div class="custom-marker" style="background-color: #007bff; color: white;"><i class="fas fa-user"></i></div>',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15],
+                    className: 'custom-div-icon'
+                });
+                
+                // Add user marker
+                L.marker([userLat, userLng], { icon: userIcon })
+                    .addTo(map)
+                    .bindPopup("Your current location");
+                
+                // Optional: Line between user and listing
+                const polyline = L.polyline([
+                    [userLat, userLng],
+                    [coords.lat, coords.lng]
+                ], {
+                    color: '#666',
+                    weight: 2,
+                    opacity: 0.5,
+                    dashArray: '5, 10'
+                }).addTo(map);
+                
+                // Map ko adjust karein ke dono markers dikhen
+                const group = new L.featureGroup([
+                    L.marker([coords.lat, coords.lng]),
+                    L.marker([userLat, userLng])
+                ]);
+                map.fitBounds(group.getBounds().pad(0.1));
+                
+            },
+            function(error) {
+                console.log("User location access denied");
+                // Koi problem nahi, sirf listing location dikhegi
+            }
+        );
+    }
 }
 </script>
   

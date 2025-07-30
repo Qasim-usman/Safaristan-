@@ -1,5 +1,6 @@
-// Location ko coordinates mein convert karne ka function
+// utils/geoCoding.js
 
+// Location ko coordinates mein convert karne ka function
 async function getCoordinatesFromLocation(location, country) {
     try {
         // Location string ko URL-safe banayiye
@@ -7,7 +8,12 @@ async function getCoordinatesFromLocation(location, country) {
         
         // Free geocoding API call (Nominatim)
         const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`
+            `https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`,
+            {
+                headers: {
+                    'User-Agent': 'Safaristan/1.0 (rqcoder412@gmail.com)' // Required for Nominatim
+                }
+            }
         );
         
         const data = await response.json();
@@ -19,10 +25,10 @@ async function getCoordinatesFromLocation(location, country) {
                 lng: parseFloat(data[0].lon)
             };
         }
-        
+
         // Agar API fail ho jaye to default coordinates
         return getDefaultCoordinates(country);
-        
+
     } catch (error) {
         console.error('Geocoding error:', error);
         return getDefaultCoordinates(country);
@@ -37,7 +43,7 @@ function getDefaultCoordinates(country) {
         'United States': { lat: 39.8283, lng: -98.5795 },
         'United Kingdom': { lat: 55.3781, lng: -3.4360 }
     };
-    
+
     return coords[country] || { lat: 0, lng: 0 };
 }
 
