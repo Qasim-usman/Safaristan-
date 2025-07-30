@@ -291,3 +291,143 @@
     background: #FF5A5F;
     color: white;
 }
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.custom-marker {
+    transition: all 0.3s ease;
+}
+
+.custom-marker:hover {
+    transform: scale(1.1);
+}
+
+.distance-label {
+    pointer-events: none;
+}
+
+#map {
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+/* Map Controls */
+.map-controls {
+    background: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
+.map-controls .btn {
+    margin-right: 5px;
+    transition: all 0.3s ease;
+}
+
+.map-controls .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.map-controls .btn.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Map Container */
+.map-container {
+    height: 400px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* Custom Markers */
+.custom-marker {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.3);
+    border: 3px solid white;
+    transition: all 0.3s ease;
+}
+
+.listing-marker {
+    background: linear-gradient(135deg, #FF5A5F, #ff3040);
+    color: white;
+    width: 35px;
+    height: 35px;
+}
+
+.user-marker {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    width: 30px;
+    height: 30px;
+}
+
+.custom-marker:hover {
+    transform: scale(1.1);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+}
+
+/* Distance Badge */
+.distance-badge {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    border: 2px solid white;
+}
+
+/* Notifications */
+.map-notification {
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .map-controls {
+        padding: 10px;
+    }
+    
+    .map-controls .btn {
+        font-size: 12px;
+        padding: 5px 8px;
+        margin-bottom: 5px;
+    }
+    
+    .btn-group {
+        flex-wrap: wrap;
+    }
+}
+
+/* Dark mode compatibility */
+@media (prefers-color-scheme: dark) {
+    .map-controls {
+        background: #2d3748;
+        color: white;
+    }
+}

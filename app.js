@@ -16,11 +16,11 @@ const MongoStore = require("connect-mongo");
 const User = require("./models/user");
 
 // ⬇️ Load environment variables
-const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/safaristan';
+const dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/airnbn';
 const secret = process.env.SECRET || 'defaultSecret';
 
 // ⬇️ MongoDB connection
-mongoose.connect(dbUrl, {
+mongoose.connect( dbUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {

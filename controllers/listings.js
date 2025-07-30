@@ -18,7 +18,7 @@ module.exports.newPostRoute = async (req, res) => {
     const listing = new Listing(req.body.listing);
 
     // Access uploaded files
-    if (req.files && req.files.image && req.files.image2) {
+    if (req.files && req.files.image && req.files.image2 &&req.files.image3)  {
       listing.image = {
         url: req.files.image[0].path,
         filename: req.files.image[0].filename
@@ -28,6 +28,11 @@ module.exports.newPostRoute = async (req, res) => {
         filename: req.files.image2[0].filename
       };
     }
+      listing.image3 = {
+        url: req.files.image3[0].path,
+        filename: req.files.image3[0].filename
+      };
+    
 
     listing.owner = req.user._id;
 
@@ -87,23 +92,44 @@ module.exports.editPutRoute = async (req, res) => {
             ...req.body.listing
         });
         
-        // 2️⃣ Image update handle kariye
-        if (req.file) {
-            const url = req.file.path;
-            const filename = req.file.filename;
-            listing.image = { url, filename };
+        // 2️⃣ Images update handle kariye (both image and image2)
+        if (req.files) {
+            // Handle first image
+            if (req.files.image && req.files.image[0]) {
+                listing.image = {
+                    url: req.files.image[0].path,
+                    filename: req.files.image[0].filename
+                };
+            }
+            
+            // Handle second image
+            if (req.files.image2 && req.files.image2[0]) {
+                listing.image2 = {
+                    url: req.files.image2[0].path,
+                    filename: req.files.image2[0].filename
+                };
+            }
         }
+            if (req.files.image3 && req.files.image3[0]) {
+                listing.image3 = {
+                    url: req.files.image3[0].path,
+                    filename: req.files.image3[0].filename
+                };
+            }
         
-        // 3️⃣ 🆕 COORDINATES UPDATE KARIYE
-        console.log('Updating coordinates for:', req.body.listing.location, req.body.listing.country);
         
-        const coordinates = await getCoordinatesFromLocation(
-            req.body.listing.location,
-            req.body.listing.country
-        );
-        
-        console.log('New coordinates:', coordinates);
-        listing.coordinates = coordinates;
+        // 3️⃣ COORDINATES UPDATE KARIYE
+        if (req.body.listing.location && req.body.listing.country) {
+            console.log('Updating coordinates for:', req.body.listing.location, req.body.listing.country);
+            
+            const coordinates = await getCoordinatesFromLocation(
+                req.body.listing.location,
+                req.body.listing.country
+            );
+            
+            console.log('New coordinates:', coordinates);
+            listing.coordinates = coordinates;
+        }
         
         // 4️⃣ Save kariye
         await listing.save();
@@ -116,7 +142,7 @@ module.exports.editPutRoute = async (req, res) => {
         req.flash("error", "Error updating listing. Please try again.");
         res.redirect(`/listings/${id}/edit`);
     }
-}
+};
 module.exports.deleteRoute=async (req, res) => {
     const { id } = req.params;
     await Listing.findByIdAndDelete(id);
