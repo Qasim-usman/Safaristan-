@@ -1,54 +1,74 @@
 <% layout('layouts/bioler') %>
+
 <div class="container mt-5">
   <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <div class="card shadow">
         <div class="card-body">
           <h3 class="mb-4 text-center">Edit this listing</h3>
 
           <form action="/listings/<%= listing._id %>?_method=PUT" method="post" enctype="multipart/form-data">
+            <!-- Title -->
             <div class="mb-3">
               <label for="title" class="form-label">Title</label>
               <input type="text" id="title" name="listing[title]" class="form-control" value="<%= listing.title %>">
             </div>
 
+            <!-- Description -->
             <div class="mb-3">
               <label for="description" class="form-label">Description</label>
               <textarea id="description" name="listing[description]" class="form-control" rows="5"><%= listing.description %></textarea>
             </div>
-             <p>Orignal Image</p>
-          <div class="mb-4 shadow rounded overflow-hidden border" style="max-width: 300px;">
-           
-  <img src="<%= transformedUrlImage %>" alt="Listing Image" 
-       class="img-fluid w-100" 
-       style="object-fit: cover; aspect-ratio: 4/3;">
-</div>
 
- <div class="mb-3">
-      <label for="image" class="form-label">Upload Image</label>
-      <input type="file" id="image" name="image" class="form-control" required >
+            <!-- Original Images -->
+            <p>Original Images</p>
+            <div class="row mb-4">
+              <div class="col-md-4">
+                <div class="border rounded shadow overflow-hidden">
+                  <img src="<%= transformedUrlImage %>" alt="Image 1" class="img-fluid w-100" style="object-fit: cover; aspect-ratio: 4/3;">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="border rounded shadow overflow-hidden">
+                  <img src="<%= transformedUrlImage2 %>" alt="Image 2" class="img-fluid w-100" style="object-fit: cover; aspect-ratio: 4/3;">
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="border rounded shadow overflow-hidden">
+                  <img src="<%= transformedUrlImage3 %>" alt="Image 3" class="img-fluid w-100" style="object-fit: cover; aspect-ratio: 4/3;">
+                </div>
+              </div>
+            </div>
 
-    </div>
- <div class="mb-3">
-      <label for="image2" class="form-label">Upload Image</label>
-      <input type="file" id="image2" name="image2" class="form-control" required >
+            <!-- New Image Uploads -->
+            <div class="mb-3">
+              <label for="image" class="form-label">Upload Image 1</label>
+              <input type="file" id="image" name="image" class="form-control" required>
+            </div>
 
-    </div>
- <div class="mb-3">
-      <label for="image3" class="form-label">Upload Image</label>
-      <input type="file" id="image3" name="image3" class="form-control" required >
+            <div class="mb-3">
+              <label for="image2" class="form-label">Upload Image 2</label>
+              <input type="file" id="image2" name="image2" class="form-control" required>
+            </div>
 
-    </div>
+            <div class="mb-3">
+              <label for="image3" class="form-label">Upload Image 3</label>
+              <input type="file" id="image3" name="image3" class="form-control" required>
+            </div>
+
+            <!-- Price -->
             <div class="mb-3">
               <label for="price" class="form-label">Price</label>
               <input type="number" id="price" name="listing[price]" class="form-control" value="<%= listing.price %>">
             </div>
 
+            <!-- Location -->
             <div class="mb-3">
               <label for="location" class="form-label">Location</label>
               <input type="text" id="location" name="listing[location]" class="form-control" value="<%= listing.location %>">
             </div>
 
+            <!-- Country -->
             <div class="mb-3">
               <label for="country" class="form-label">Country</label>
               <input type="text" id="country" name="listing[country]" class="form-control" value="<%= listing.country %>">
@@ -56,6 +76,7 @@
 
             <button type="submit" class="btn btn-primary w-100">Submit</button>
           </form>
+
         </div>
       </div>
     </div>

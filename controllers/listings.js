@@ -77,9 +77,13 @@ module.exports.editGetRoute = async (req, res) => {
     }
 
     const originalUrlImage = listing.image.url;
-    const transformedUrlImage = originalUrlImage.replace("/upload/", "/upload/h_150,w_230/");
+    const originalUrlImage2 = listing.image2.url;
+    const originalUrlImage3 = listing.image3.url;
+    const transformedUrlImage = originalUrlImage.replace("/upload/", "/upload/w_230/");
+    const transformedUrlImage2 = originalUrlImage2.replace("/upload/", "/upload/w_230/");
+    const transformedUrlImage3= originalUrlImage3.replace("/upload/", "/upload/w_230/");
 
-    res.render("listings/edit", { listing, transformedUrlImage });
+    res.render("listings/edit", { listing, transformedUrlImage,transformedUrlImage2,transformedUrlImage3 });
 };
 
 // UPDATE - Existing listing edit karne ka function
